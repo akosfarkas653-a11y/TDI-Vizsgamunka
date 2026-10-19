@@ -1,14 +1,11 @@
 # DIAK
-Diak Belep
+-Diak Belep
 
+-Diak lefoglal egy orat
 
-Diak lefoglal egy orat
+-Diak torli a foglalast
 
-
-Diak torli a foglalast
-
-
-Diak beallitja hogy mely napon mely orakat szeretne foglalni
+-Diak beallitja hogy mely napon mely orakat szeretne foglalni
 
 # Tanar
 Tanar belep
