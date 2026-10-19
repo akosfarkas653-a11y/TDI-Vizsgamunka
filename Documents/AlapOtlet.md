@@ -3,5 +3,5 @@ Diak, Tanar, Admin belepesek
 
 elso oldal: Bejelentkezes -> Kiválasztom hogy ki szeretnek lenni -> Diaknak, tanarnak,vagy adminnak a login feluleten be irom a adataimat
 
-
+Bejelentkezek tanarkent, es megadom a szabad idopontokat
 
