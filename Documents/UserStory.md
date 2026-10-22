@@ -1,4 +1,4 @@
-# DIAK
+# Diak jogosultsagu belepesi profil
 -Diak Belep
 
 -Diak lefoglal egy orat
@@ -7,7 +7,7 @@
 
 -Diak beallitja hogy mely napon mely orakat szeretne foglalni
 
-# Tanar
+# Tanar jogosultsagu belepesi profil
 -Tanar belep
 
 -Tanar megnezi a foglalt orakat
@@ -19,7 +19,7 @@
 -Tanar torol egy orat es megjeleni a diakoknak is hogy torolve lett
 
 
-# Admin
+# Admin jogosultsagu belepesi profil
 -Admin belep
 
 -Admin kilistazza a tanarokat es a diakokat
