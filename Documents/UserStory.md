@@ -1,6 +1,7 @@
 # Diak jogosultsagu belepesi profil
 <ol>
 <li>Diak Belep</li>
+<li>Diak keres egy orat</li>
 <li>Diak lefoglal egy orat</li>
 <li>Diak torli a foglalast</li>
 </ol>
