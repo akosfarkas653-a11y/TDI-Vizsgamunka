@@ -1,25 +1,32 @@
 # Diak jogosultsagu belepesi profil
 <ol>
-<li>Diak Belep</li>
-<li>Diak keres egy orat</li>
-<li>Diak lefoglal egy orat</li>
-<li>Diak torli a foglalast</li>
+<li>Belép.</li>
+<li>A főoldalon látja a még szabad órákat.</li>
+<li>Külön keres tanárra és tantárgyra.</li>
+<li>Lefoglal egy órát, ekkor az állapota függőben lesz.</li>
+<li>A dashboardján látja a foglalásait, és hogy a tanár jóváhagyta-e.</li>
+<li>Lemondja a foglalását, a tanár értesítést kap (dátum, időpont, tantárgy, diák neve).</li>
+<li>Értesítést kap, ha a tanár lemondta az óráját (dátum, időpont, tantárgy, tanár neve).</li>
+<li>Törli a saját profilját megerősítés után (soft delete).</li>
 </ol>
 
 # Tanar jogosultsagu belepesi profil
 <ol>
-<li>Tanar belep</li>
-<li>Tanar feltolti a szabad idopontokat</li>
-<li>Tanar torol egy orat</li>
-<li>Tanar jovahagyja az orakat</li>
-<li>Tanar torol egy orat es megjeleni a diakoknak is hogy torolve lett</li>
+<li>Belép (az admin által létrehozott fiókkal).</li>
+<li>Szabad órákat/időpontokat hirdet meg (tantárggyal, dátummal, idővel).</li>
+<li>A dashboardján látja a foglalásokat: a foglaló diák nevét és e-mail címét.</li>
+<li>Jóváhagyja a diák foglalását.</li>
+<li>Töröl/lemond egy órát, a foglaló diák értesítést kap, és az óra „lemondva” állapotot kap.</li>
+<li>Értesítést kap, ha a diák lemondta a foglalást.</li>
+<li>Kimutatást lát a saját profiljáról: meghirdetett, szabad, függő, jóváhagyott és lemondott órák száma.</li>
 </ol>
 
 # Admin jogosultsagu belepesi profil
 <ol>
-<li>Admin belep</li>
-<li>Admin kilistazza a tanarokat es a diakokat</li>
-<li>Admin torol egy tanart es a hozza tartozo orakat</li>
-<li>Admin torol egy diakot es a foglalt orait</li>
-<li>Admin kilistazza hogy hany tanar hany diakot fogadott</li>
+<li>Belép (külön admin belépés).</li>
+<li>Tanár fiókot hoz létre.</li>
+<li>Listázza a tanárokat, a diákokat és a foglalt órákat.</li>
+<li>Töröl egy tanárt megerősítés után (soft delete). Az óráit is érinti: a szabad órák eltűnnek a diákok elől, a foglaltaknál a diák értesítést kap.</li>
+<li>Töröl egy diákot megerősítés után (soft delete). A foglalásai felszabadulnak vagy lemondott állapotot kapnak, a tanár értesítést kap.</li>
+<li>Egy kiválasztott tanárnál vagy diáknál listázza az óraszámokat és a foglalt órák listáját.</li>
 </ol>
