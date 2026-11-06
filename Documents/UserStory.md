@@ -27,6 +27,7 @@
 <li>Tanár fiókot hoz létre.</li>
 <li>Listázza a tanárokat, a diákokat és a foglalt órákat.</li>
 <li>Töröl egy tanárt megerősítés után (soft delete). Az óráit is érinti: a szabad órák eltűnnek a diákok elől, a foglaltaknál a diák értesítést kap.</li>
-<li>Töröl egy diákot megerősítés után (soft delete). A foglalásai felszabadulnak vagy lemondott állapotot kapnak, a tanár értesítést kap.</li>
+<li>Töröl egy diákot megerősítés után (soft delete). A foglalásai felszabadulnak vagy lemondott állapotot kapnak, a tanár értesítést kap
+</li>
 <li>Egy kiválasztott tanárnál vagy diáknál listázza az óraszámokat és a foglalt órák listáját.</li>
 </ol>
