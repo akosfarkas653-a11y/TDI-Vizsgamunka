@@ -1,27 +1,27 @@
-# Diak jogosultsagu belepesi profil
+# Diák jogosultságú belépési profil
 <ol>
 <li>Belép.</li>
 <li>A főoldalon látja a még szabad órákat.</li>
 <li>Külön keres tanárra és tantárgyra.</li>
 <li>Lefoglal egy órát, ekkor az állapota függőben lesz.</li>
-<li>A dashboardján látja a foglalásait, és hogy a tanár jóváhagyta-e.</li>
+<li>A dashboardján megtekinti az óráit, és hogy a tanár jóváhagyta-e.</li>
 <li>Lemondja a foglalását, a tanár értesítést kap (dátum, időpont, tantárgy, diák neve).</li>
-<li>Értesítést kap, ha a tanár lemondta az óráját (dátum, időpont, tantárgy, tanár neve).</li>
+<li>Értesítést kap, amikor a tanár lemondta az óráját (dátum, időpont, tantárgy, tanár neve).</li>
 <li>Törli a saját profilját megerősítés után (soft delete).</li>
 </ol>
 
-# Tanar jogosultsagu belepesi profil
+# Tanar jogosultságú belépési profil
 <ol>
 <li>Belép (az admin által létrehozott fiókkal).</li>
 <li>Szabad órákat/időpontokat hirdet meg (tantárggyal, dátummal, idővel).</li>
-<li>A dashboardján látja a foglalásokat: a foglaló diák nevét és e-mail címét.</li>
+<li>A dashboardján megnézi a foglalásokat: a foglaló diák nevét és e-mail címét.</li>
 <li>Jóváhagyja a diák foglalását.</li>
 <li>Töröl/lemond egy órát, a foglaló diák értesítést kap, és az óra „lemondva” állapotot kap.</li>
-<li>Értesítést kap, ha a diák lemondta a foglalást.</li>
-<li>Kimutatást lát a saját profiljáról: meghirdetett, szabad, függő, jóváhagyott és lemondott órák száma.</li>
+<li>Értesítést kap, amikor a diák lemondta a foglalást.</li>
+<li>Kimutatást néz meg a saját profiljáról: meghirdetett, szabad, függő, jóváhagyott és lemondott órák száma.</li>
 </ol>
 
-# Admin jogosultsagu belepesi profil
+# Admin jogosultságú belépési profil
 <ol>
 <li>Belép (külön admin belépés).</li>
 <li>Tanár fiókot hoz létre.</li>
