@@ -1,0 +1,49 @@
+# SQLite adatbázis fájlok engedélyezése (felkerül a Gitre)
+!*.sqlite
+!*.db
+
+# SQLite ideiglenes naplófájlok (ezek nem kellenek a repóba)
+*.sqlite-journal
+*.db-journal
+
+# Node & npm (BackEnd és FrontEnd könyvtárakban is)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Környezeti változók és titkos kulcsok (BackEnd/.env, FrontEnd/.env stb.)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Építési és fordítási könyvtárak (pl. React / Vite build kimenetek)
+dist/
+build/
+out/
+.next/
+
+# IDE és kódszerkesztő konfigurációk
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Szerkesztő biztonsági mentések és ideiglenes fájlok (pl. Dia mentések: TDIadatbazis.dia~)
+*~
+*.bak
+*.tmp
+
+# Operációs rendszer fájlok
+Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+.DS_Store
