@@ -2,11 +2,12 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Tanár-Diák-Interface (TDI) SQLite Backend",
-  "main": "src/server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node src/server.js",
+    "start": "node server.js",
     "seed": "node src/seed/seedAdmin.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch server.js"
   },
   "keywords": [],
   "author": "",

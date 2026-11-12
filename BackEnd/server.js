@@ -5,20 +5,20 @@ try {
   if (process.loadEnvFile) {
     try {
       process.loadEnvFile();
-    } catch (_) { }
+    } catch (_) {}
   }
 }
 
 const express = require('express');
 const cors = require('cors');
-const { PORT } = require('./config/config');
-const { syncDatabase } = require('./models');
+const { PORT } = require('./src/config/config');
+const { syncDatabase } = require('./src/models');
 
-const authRoutes = require('./routes/auth.routes');
-const studentRoutes = require('./routes/student.routes');
-const teacherRoutes = require('./routes/teacher.routes');
-const adminRoutes = require('./routes/admin.routes');
-const notificationRoutes = require('./routes/notification.routes');
+const authRoutes = require('./src/routes/auth.routes');
+const studentRoutes = require('./src/routes/student.routes');
+const teacherRoutes = require('./src/routes/teacher.routes');
+const adminRoutes = require('./src/routes/admin.routes');
+const notificationRoutes = require('./src/routes/notification.routes');
 
 const app = express();
 
@@ -43,3 +43,4 @@ app.listen(PORT, async () => {
   console.log(`A TDI szerver elindult a http://localhost:${PORT} cimen`);
   await syncDatabase();
 });
+
