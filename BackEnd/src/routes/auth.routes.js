@@ -2,10 +2,10 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/auth.controller');
 
-// Diák regisztráció
-router.post('/register', authController.registerStudent);
+// Diak regisztracio
+router.post('/register', authController.register);
 
-// Bejelentkezés (diák, tanár, admin)
+// Bejelentkezes (diak, tanar, admin)
 router.post('/login', authController.login);
 
 module.exports = router;

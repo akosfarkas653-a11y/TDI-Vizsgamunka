@@ -1,58 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db');
+const adminController = require('../controllers/admin.controller');
+const { verifyToken, checkRole } = require('../middlewares/auth.middleware');
 
-// Új tanár létrehozása (csak admin)
-router.post('/teachers', async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Név, email és jelszó kötelező!' });
-    }
+// Minden admin vegpont vedett (token + admin szerepkor)
+router.use(verifyToken, checkRole('admin'));
 
-    const result = await db.run(
-      'INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)',
-      [name, email, password, 'teacher']
-    );
+// Tanar fiok letrehozasa
+router.post('/teachers', adminController.createTeacher);
 
-    res.status(201).json({ message: 'Tanár sikeresen létrehozva', teacherId: result.lastID });
-  } catch (err) {
-    if (err.message.includes('UNIQUE constraint failed')) {
-      return res.status(409).json({ error: 'Ez az email cím már foglalt!' });
-    }
-    res.status(500).json({ error: err.message });
-  }
-});
+// Tanarok es diakok listazasa
+router.get('/teachers', adminController.getTeachers);
+router.get('/students', adminController.getStudents);
 
-// Felhasználók listázása szerepkör szerint
-router.get('/users', async (req, res) => {
-  try {
-    const { role } = req.query;
-    let sql = 'SELECT id, name, email, role, is_deleted, created_at FROM users WHERE is_deleted = 0';
-    const params = [];
+// Foglalt orak listazasa
+router.get('/lessons', adminController.getLessons);
 
-    if (role) {
-      sql += ' AND role = ?';
-      params.push(role);
-    }
+// Reszletes statisztika es orak egy tanarra vagy diakra
+router.get('/teachers/:id/overview', adminController.getTeacherOverview);
+router.get('/students/:id/overview', adminController.getStudentOverview);
 
-    const users = await db.all(sql, params);
-    res.json(users);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Felhasználó soft delete (diák vagy tanár)
-router.delete('/users/:id', async (req, res) => {
-  try {
-    const userId = req.params.id;
-    await db.run('UPDATE users SET is_deleted = 1 WHERE id = ?', [userId]);
-    res.json({ message: 'Felhasználó sikeresen inaktiválva (soft delete)' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Felhasznalok inaktivalasa (soft delete)
+router.delete('/teachers/:id', adminController.deleteTeacher);
+router.delete('/students/:id', adminController.deleteStudent);
 
 module.exports = router;
-

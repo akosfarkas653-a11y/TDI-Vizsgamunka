@@ -1,37 +1,49 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { Student, Teacher, Admin } = require('../models');
+const { JWT_SECRET } = require('../config/config');
+const studentRepository = require('../repositories/student.repository');
+const teacherRepository = require('../repositories/teacher.repository');
+const adminRepository = require('../repositories/admin.repository');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'tdi_secret_key_2026';
 const SALT_ROUNDS = 10;
 
-// Jelszó hashelése
-const hashPassword = async (plainPassword) => {
-  return await bcrypt.hash(plainPassword, SALT_ROUNDS);
+// Segedfuggveny: Email egyediseg ellenorzese mindket felhasznaloi tablaban
+const checkEmailUnique = async (email) => {
+  const existingStudent = await studentRepository.findByEmail(email);
+  if (existingStudent) {
+    throw new Error('Ez az email cim mar regisztralva van!');
+  }
+  const existingTeacher = await teacherRepository.findByEmail(email);
+  if (existingTeacher) {
+    throw new Error('Ez az email cim mar regisztralva van!');
+  }
 };
 
-// Jelszó ellenőrzése
-const verifyPassword = async (plainPassword, hashedPassword) => {
-  return await bcrypt.compare(plainPassword, hashedPassword);
-};
-
-// JWT token generálása
-const generateToken = (payload) => {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '24h' });
-};
-
-// Diák regisztráció
-const registerStudent = async ({ nev, email, jelszo }) => {
-  const existing = await Student.findOne({ where: { diak_email: email } });
-  if (existing) {
-    throw new Error('Ezzel az email cimmel mar letezik diak fiok!');
+// Diak regisztracio (mindig diakot hoz letre)
+const register = async ({ nev, email, jelszo }) => {
+  if (!nev || !email || !jelszo) {
+    throw new Error('Minden mezo kitoltese kotelezo (nev, email, jelszo)!');
   }
 
-  const hashedPassword = await hashPassword(jelszo);
+  // Egyszeru email formatum ellenorzes
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    throw new Error('Ervenytelen email formatum!');
+  }
 
-  const student = await Student.create({
-    diak_nev: nev,
-    diak_email: email,
+  // Jelszo minimalis hossza
+  if (jelszo.length < 6) {
+    throw new Error('A jelszonak legalabb 6 karakter hosszunak kell lennie!');
+  }
+
+  // Email egyediseg ellenorzese mindket tablaban (torolt fiok is foglaltnak szamit)
+  await checkEmailUnique(email);
+
+  const hashedPassword = await bcrypt.hash(jelszo, SALT_ROUNDS);
+
+  const student = await studentRepository.create({
+    diak_nev: nev.trim(),
+    diak_email: email.trim().toLowerCase(),
     diak_jelszo: hashedPassword,
     deleted: 0
   });
@@ -39,106 +51,89 @@ const registerStudent = async ({ nev, email, jelszo }) => {
   return {
     id: student.diak_ID,
     nev: student.diak_nev,
-    email: student.diak_email
+    email: student.diak_email,
+    role: 'student'
   };
 };
 
-// Tanár létrehozása (Admin által)
-const createTeacher = async ({ nev, email, jelszo }) => {
-  const existing = await Teacher.findOne({ where: { tanar_email: email } });
-  if (existing) {
-    throw new Error('Ezzel az email cimmel mar letezik tanar fiok!');
+// Bejelentkezes (egyetlen bejelentkezo urlap)
+const login = async ({ email, jelszo }) => {
+  if (!email || !jelszo) {
+    throw new Error('Hibas belepesi adatok');
   }
 
-  const hashedPassword = await hashPassword(jelszo);
-
-  const teacher = await Teacher.create({
-    tanar_nev: nev,
-    tanar_email: email,
-    tanar_jelszo: hashedPassword,
-    deleted: 0
-  });
-
-  return {
-    id: teacher.tanar_ID,
-    nev: teacher.tanar_nev,
-    email: teacher.tanar_email
-  };
-};
-
-// Bejelentkezés kezelése szerepkör alapján
-const login = async ({ role, azonosito, jelszo }) => {
-  // role: 'student' | 'teacher' | 'admin'
-  let user = null;
+  const identifier = email.trim();
+  let foundUser = null;
+  let role = null;
   let userId = null;
   let userName = null;
   let userEmail = null;
+  let storedHash = null;
 
-  if (role === 'student') {
-    user = await Student.findOne({ where: { diak_email: azonosito, deleted: 0 } });
-    if (!user) {
-      throw new Error('Hibas email cim vagy a fiok inaktiv!');
+  if (identifier.includes('@')) {
+    // Diak vagy tanar keresese
+    const student = await studentRepository.findByEmail(identifier.toLowerCase());
+    if (student) {
+      if (student.deleted === 1) {
+        throw new Error('Hibas belepesi adatok');
+      }
+      foundUser = student;
+      role = 'student';
+      userId = student.diak_ID;
+      userName = student.diak_nev;
+      userEmail = student.diak_email;
+      storedHash = student.diak_jelszo;
+    } else {
+      const teacher = await teacherRepository.findByEmail(identifier.toLowerCase());
+      if (teacher) {
+        if (teacher.deleted === 1) {
+          throw new Error('Hibas belepesi adatok');
+        }
+        foundUser = teacher;
+        role = 'teacher';
+        userId = teacher.tanar_ID;
+        userName = teacher.tanar_nev;
+        userEmail = teacher.tanar_email;
+        storedHash = teacher.tanar_jelszo;
+      }
     }
-    const isValid = await verifyPassword(jelszo, user.diak_jelszo);
-    if (!isValid) {
-      throw new Error('Hibas jelszo!');
-    }
-    userId = user.diak_ID;
-    userName = user.diak_nev;
-    userEmail = user.diak_email;
-
-  } else if (role === 'teacher') {
-    user = await Teacher.findOne({ where: { tanar_email: azonosito, deleted: 0 } });
-    if (!user) {
-      throw new Error('Hibas email cim vagy a fiok inaktiv!');
-    }
-    const isValid = await verifyPassword(jelszo, user.tanar_jelszo);
-    if (!isValid) {
-      throw new Error('Hibas jelszo!');
-    }
-    userId = user.tanar_ID;
-    userName = user.tanar_nev;
-    userEmail = user.tanar_email;
-
-  } else if (role === 'admin') {
-    // Admin azonosito a nev (nem tartalmazhat '@'-ot)
-    user = await Admin.findOne({ where: { admin_nev: azonosito } });
-    if (!user) {
-      throw new Error('Hibas adminisztratori felhasznalonev!');
-    }
-    const isValid = await verifyPassword(jelszo, user.admin_jelszo);
-    if (!isValid) {
-      throw new Error('Hibas jelszo!');
-    }
-    userId = user.admin_ID;
-    userName = user.admin_nev;
-    userEmail = null;
-
   } else {
-    throw new Error('Ervenytelen szerepkor!');
+    // Admin keresese nev alapjan
+    const admin = await adminRepository.findByName(identifier);
+    if (admin) {
+      foundUser = admin;
+      role = 'admin';
+      userId = admin.admin_ID;
+      userName = admin.admin_nev;
+      userEmail = null;
+      storedHash = admin.admin_jelszo;
+    }
   }
 
-  const tokenPayload = {
-    id: userId,
-    nev: userName,
-    email: userEmail,
-    role: role
-  };
+  if (!foundUser || !storedHash) {
+    throw new Error('Hibas belepesi adatok');
+  }
 
-  const token = generateToken(tokenPayload);
+  const passwordMatch = await bcrypt.compare(jelszo, storedHash);
+  if (!passwordMatch) {
+    throw new Error('Hibas belepesi adatok');
+  }
+
+  const token = jwt.sign({ id: userId, role }, JWT_SECRET, { expiresIn: '24h' });
 
   return {
     token,
-    user: tokenPayload
+    user: {
+      id: userId,
+      nev: userName,
+      email: userEmail,
+      role
+    }
   };
 };
 
 module.exports = {
-  hashPassword,
-  verifyPassword,
-  generateToken,
-  registerStudent,
-  createTeacher,
+  checkEmailUnique,
+  register,
   login
 };
-

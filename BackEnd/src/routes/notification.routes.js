@@ -1,31 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const db = require('../config/db');
+const notificationController = require('../controllers/notification.controller');
+const { verifyToken, checkRole } = require('../middlewares/auth.middleware');
 
-// Felhasználó értesítéseinek listázása
-router.get('/:userId', async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const notifications = await db.all(
-      'SELECT id, message, is_read, created_at FROM notifications WHERE user_id = ? ORDER BY created_at DESC',
-      [userId]
-    );
-    res.json(notifications);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Vedett vegpontok diakok es tanarok reszere
+router.use(verifyToken, checkRole('student', 'teacher'));
 
-// Értesítés olvasottnak jelölése
-router.put('/:id/read', async (req, res) => {
-  try {
-    const { id } = req.params;
-    await db.run('UPDATE notifications SET is_read = 1 WHERE id = ?', [id]);
-    res.json({ message: 'Értesítés olvasottnak jelölve' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Sajat ertesitesek lekerdezese
+router.get('/', notificationController.getNotifications);
+
+// Ertesites olvasottnak jelolese
+router.put('/:id/read', notificationController.markAsRead);
 
 module.exports = router;
-
