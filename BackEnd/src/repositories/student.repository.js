@@ -12,15 +12,23 @@ const studentRepository = {
   },
 
   findAll: async () => {
-    return await Student.findAll();
+    return await Student.findAll({ order: [['diak_ID', 'ASC']] });
   },
 
   findAllActive: async () => {
-    return await Student.findAll({ where: { deleted: 0 } });
+    return await Student.findAll({ where: { deleted: 0 }, order: [['diak_ID', 'ASC']] });
   },
 
   create: async (data) => {
     return await Student.create(data);
+  },
+
+  bulkCreate: async (data, options = {}) => {
+    return await Student.bulkCreate(data, options);
+  },
+
+  count: async () => {
+    return await Student.count();
   },
 
   softDelete: async (id) => {
@@ -29,4 +37,3 @@ const studentRepository = {
 };
 
 module.exports = studentRepository;
-

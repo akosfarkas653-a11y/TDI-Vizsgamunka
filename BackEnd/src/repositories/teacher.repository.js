@@ -12,15 +12,23 @@ const teacherRepository = {
   },
 
   findAll: async () => {
-    return await Teacher.findAll();
+    return await Teacher.findAll({ order: [['tanar_ID', 'ASC']] });
   },
 
   findAllActive: async () => {
-    return await Teacher.findAll({ where: { deleted: 0 } });
+    return await Teacher.findAll({ where: { deleted: 0 }, order: [['tanar_ID', 'ASC']] });
   },
 
   create: async (data) => {
     return await Teacher.create(data);
+  },
+
+  bulkCreate: async (data, options = {}) => {
+    return await Teacher.bulkCreate(data, options);
+  },
+
+  count: async () => {
+    return await Teacher.count();
   },
 
   softDelete: async (id) => {
@@ -29,4 +37,3 @@ const teacherRepository = {
 };
 
 module.exports = teacherRepository;
-

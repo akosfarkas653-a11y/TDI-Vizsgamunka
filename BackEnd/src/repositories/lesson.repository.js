@@ -1,14 +1,19 @@
 const { Op } = require('sequelize');
-const Lesson = require('../models/Lesson');
-const LessonStatus = require('../models/LessonStatus');
-const Teacher = require('../models/Teacher');
-const Student = require('../models/Student');
+const { Lesson, LessonStatus, Teacher, Student } = require('../models');
 const STATUS = require('../config/lessonStatus');
 
 // Orak adattar (Repository)
 const lessonRepository = {
   create: async (data) => {
     return await Lesson.create(data);
+  },
+
+  bulkCreate: async (data, options = {}) => {
+    return await Lesson.bulkCreate(data, options);
+  },
+
+  count: async () => {
+    return await Lesson.count();
   },
 
   findById: async (id) => {
@@ -170,4 +175,3 @@ const lessonRepository = {
 };
 
 module.exports = lessonRepository;
-

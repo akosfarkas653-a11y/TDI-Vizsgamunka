@@ -26,8 +26,11 @@ const lessonStatusRepository = {
 
   findById: async (id) => {
     return await LessonStatus.findByPk(id);
+  },
+
+  count: async () => {
+    return await LessonStatus.count();
   }
 };
 
 module.exports = lessonStatusRepository;
-

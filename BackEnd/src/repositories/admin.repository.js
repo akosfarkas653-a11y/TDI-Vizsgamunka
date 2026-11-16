@@ -12,8 +12,11 @@ const adminRepository = {
 
   create: async (data) => {
     return await Admin.create(data);
+  },
+
+  count: async () => {
+    return await Admin.count();
   }
 };
 
 module.exports = adminRepository;
-
