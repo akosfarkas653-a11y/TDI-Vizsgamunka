@@ -157,8 +157,8 @@ Authorization: Bearer {{ADMINTOKEN}}
 Content-Type: application/json
 
 {
-  "nev": "Minta Tanár",
-  "email": "minta.tanar@example.com",
+  "nev": "Varga Tamas",
+  "email": "vtamas.tanar@example.com",
   "jelszo": "password123"
 }
 

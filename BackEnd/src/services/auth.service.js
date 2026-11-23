@@ -119,7 +119,7 @@ const login = async ({ email, jelszo }) => {
     throw new Error('Hibas belepesi adatok');
   }
 
-  const token = jwt.sign({ id: userId, role }, JWT_SECRET, { expiresIn: '24h' });
+  const token = jwt.sign({ id: userId, role }, JWT_SECRET, { expiresIn: '1h' });
 
   return {
     token,
