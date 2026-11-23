@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TDI - Magánórák</title>
+    <link rel="stylesheet" href="landingpage.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Header / Navigáció -->
+    <header class="navbar">
+        <div class="logo">
+            <span class="logo-icon">📚</span>
+            <strong>TDI</strong>
+        </div>
+        <nav class="nav-links">
+            <a href="landingpage.html">Főoldal</a>
+            <a href="#tantargyak">Tantárgyak ▾</a>
+            <a href="#rolunk">Rólunk</a>
+            <a href="#blog">Blog</a>
+        </nav>
+        <div class="nav-btn">
+            <a href="index.html#/login" class="btn-login">BEJELENTKEZÉS</a>
+        </div>
+    </header>
+
+    <!-- Hero Szekció (Háttérkép + Fő tartalom) -->
+    <section class="hero">
+        <div class="hero-content">
+            <!-- Bal oldal: Szöveg és Foglaló Űrlap -->
+            <div class="hero-text-card">
+                <h1>Találd Meg A Tökéletes Magántanárod!</h1>
+                <p>Személyre szabott magánórák minden tantárgyból. Foglalj időpontot egyszerűen és gyorsan online!</p>
+
+                <!-- Foglalás Doboz -->
+                <div class="booking-box">
+                    <h3>Foglalj időpontot most</h3>
+                    <div class="form-group">
+                        <label for="tantargy-valaszto">Válassz tantárgyat:</label>
+                        <select id="tantargy-valaszto">
+                            <option>Matematika</option>
+                            <option>Fizika</option>
+                            <option>Angol</option>
+                            <option>Informatika</option>
+                            <option>Kémia</option>
+                            <option>Történelem</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanar-valaszto">Válassz tanárt:</label>
+                        <select id="tanar-valaszto">
+                            <option>Kovács István</option>
+                            <option>Tóth Erzsébet</option>
+                            <option>Horváth Péter</option>
+                        </select>
+                    </div>
+
+                    <a href="index.html#/login" class="btn-book" style="display: block; text-align: center; text-decoration: none;">IDŐPONT FOGLALÁSA</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Alsó Információs Kártyák -->
+    <section id="rolunk" class="features">
+        <div class="feature-card">
+            <h3>Képzett Tanárok</h3>
+            <p>Képzett tanáraink minden tanárról átfogó értékeléssel rendelkeznek.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Rugalmas Időpontok</h3>
+            <p>Számodra szabott időbeosztás, online vagy személyes formában.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Személyre Szabott Tanterv</h3>
+            <p>A tempódhoz és céljaidhoz igazított egyéni fejlesztés.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Biztonságos Online Felület</h3>
+            <p>Biztonságos online felület és egyszerű fizetési lehetőségek.</p>
+        </div>
+    </section>
+
+</body>
+
+</html>
