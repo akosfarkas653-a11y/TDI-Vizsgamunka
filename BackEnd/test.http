@@ -2,7 +2,7 @@
 ### TDI (Tanár-Diák-Interface) - REST Client Manuális Tesztfájl
 ### ==============================================================================
 ### HASZNÁLATI ÚTMUTATÓ:
-### 1. Indítsd el a backend szervert (npm start a BackEnd mappában, port: 5000).
+### 1. Indítsd el a backend szervert (npm start a BackEnd mappában, port: 3000).
 ### 2. Először a 2. SZEKCIÓBAN lévő bejelentkezési kéréseket (loginAdmin, loginStudent,
 ###    loginTeacher) futtasd le! A tesztkörnyezet automatikusan kinyeri és változókba
 ###    menti a kapott JWT tokeneket.
@@ -27,10 +27,10 @@
 ### ==============================================================================
 
 ### Rendszer állapot ellenőrzése token nélkül (GET /api/health) (200 OK)
-GET http://localhost:5000/api/health
+GET http://localhost:3000/api/health
 
 ### Nem létező gyökér végpont lekérdezése (várhatóan 404 Hiba)
-GET http://localhost:5000/
+GET http://localhost:3000/
 
 
 ### ==============================================================================
@@ -38,7 +38,7 @@ GET http://localhost:5000/
 ### ==============================================================================
 
 ### Új diák regisztrációja érvényes adatokkal (POST /api/auth/register) (201 Created)
-POST http://localhost:5000/api/auth/register
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
@@ -48,7 +48,7 @@ Content-Type: application/json
 }
 
 ### Diák regisztrációja extra role mezővel (POST /api/auth/register) (201 Created)
-POST http://localhost:5000/api/auth/register
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
@@ -59,7 +59,7 @@ Content-Type: application/json
 }
 
 ### Diák regisztrációja már létező diák e-maillel (várhatóan 400 Hiba)
-POST http://localhost:5000/api/auth/register
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
@@ -69,7 +69,7 @@ Content-Type: application/json
 }
 
 ### Diák regisztrációja már létező tanár e-maillel (várhatóan 400 Hiba)
-POST http://localhost:5000/api/auth/register
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
@@ -79,7 +79,7 @@ Content-Type: application/json
 }
 
 ### Diák regisztrációja túl rövid jelszóval (várhatóan 400 Hiba)
-POST http://localhost:5000/api/auth/register
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
@@ -89,7 +89,7 @@ Content-Type: application/json
 }
 
 ### Diák regisztrációja hibás e-mail formátummal (várhatóan 400 Hiba)
-POST http://localhost:5000/api/auth/register
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
@@ -100,7 +100,7 @@ Content-Type: application/json
 
 ### Bejelentkezés adminisztrátorként (POST /api/auth/login) (200 OK)
 # @name loginAdmin
-POST http://localhost:5000/api/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -110,7 +110,7 @@ Content-Type: application/json
 
 ### Bejelentkezés diákként (POST /api/auth/login) (200 OK)
 # @name loginStudent
-POST http://localhost:5000/api/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -120,7 +120,7 @@ Content-Type: application/json
 
 ### Bejelentkezés tanárként (POST /api/auth/login) (200 OK)
 # @name loginTeacher
-POST http://localhost:5000/api/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -129,7 +129,7 @@ Content-Type: application/json
 }
 
 ### Bejelentkezési kísérlet hibás jelszóval (várhatóan 401 Hiba)
-POST http://localhost:5000/api/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -138,7 +138,7 @@ Content-Type: application/json
 }
 
 ### Bejelentkezési kísérlet nem létező felhasználóval (várhatóan 401 Hiba)
-POST http://localhost:5000/api/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -152,7 +152,7 @@ Content-Type: application/json
 ### ==============================================================================
 
 ### Új tanár létrehozása ADMIN tokennel (POST /api/admin/teachers) (201 Created)
-POST http://localhost:5000/api/admin/teachers
+POST http://localhost:3000/api/admin/teachers
 Authorization: Bearer {{ADMINTOKEN}}
 Content-Type: application/json
 
@@ -163,7 +163,7 @@ Content-Type: application/json
 }
 
 ### Új tanár létrehozása már létező diák e-maillel (várhatóan 400 Hiba)
-POST http://localhost:5000/api/admin/teachers
+POST http://localhost:3000/api/admin/teachers
 Authorization: Bearer {{ADMINTOKEN}}
 Content-Type: application/json
 
@@ -174,42 +174,42 @@ Content-Type: application/json
 }
 
 ### Aktív tanárok listázása ADMIN tokennel (GET /api/admin/teachers) (200 OK)
-GET http://localhost:5000/api/admin/teachers
+GET http://localhost:3000/api/admin/teachers
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Összes tanár listázása inaktívakkal együtt ADMIN tokennel (GET /api/admin/teachers?includeDeleted=true) (200 OK)
-GET http://localhost:5000/api/admin/teachers?includeDeleted=true
+GET http://localhost:3000/api/admin/teachers?includeDeleted=true
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Aktív diákok listázása ADMIN tokennel (GET /api/admin/students) (200 OK)
-GET http://localhost:5000/api/admin/students
+GET http://localhost:3000/api/admin/students
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Összes diák listázása inaktívakkal együtt ADMIN tokennel (GET /api/admin/students?includeDeleted=true) (200 OK)
-GET http://localhost:5000/api/admin/students?includeDeleted=true
+GET http://localhost:3000/api/admin/students?includeDeleted=true
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Foglalt és jóváhagyott órák lekérdezése ADMIN tokennel (GET /api/admin/lessons) (200 OK)
-GET http://localhost:5000/api/admin/lessons
+GET http://localhost:3000/api/admin/lessons
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Tanár részletes áttekintése ADMIN tokennel (GET /api/admin/teachers/{{teacherId}}/overview) (200 OK)
-GET http://localhost:5000/api/admin/teachers/{{teacherId}}/overview
+GET http://localhost:3000/api/admin/teachers/{{teacherId}}/overview
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Diák részletes áttekintése ADMIN tokennel (GET /api/admin/students/{{studentId}}/overview) (200 OK)
-GET http://localhost:5000/api/admin/students/{{studentId}}/overview
+GET http://localhost:3000/api/admin/students/{{studentId}}/overview
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Nem létező tanár áttekintése ADMIN tokennel (várhatóan 404 Hiba)
-GET http://localhost:5000/api/admin/teachers/9999/overview
+GET http://localhost:3000/api/admin/teachers/9999/overview
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Tanárok listázása token NÉLKÜL (várhatóan 401 Hiba)
-GET http://localhost:5000/api/admin/teachers
+GET http://localhost:3000/api/admin/teachers
 
 ### Admin végpont hívása DIÁK tokennel (várhatóan 403 Hiba)
-GET http://localhost:5000/api/admin/teachers
+GET http://localhost:3000/api/admin/teachers
 Authorization: Bearer {{STUDENTTOKEN}}
 
 
@@ -218,7 +218,7 @@ Authorization: Bearer {{STUDENTTOKEN}}
 ### ==============================================================================
 
 ### Új óra meghirdetése tanárként - Matematika (POST /api/teacher/lessons) (201 Created)
-POST http://localhost:5000/api/teacher/lessons
+POST http://localhost:3000/api/teacher/lessons
 Authorization: Bearer {{TEACHERTOKEN}}
 Content-Type: application/json
 
@@ -228,7 +228,7 @@ Content-Type: application/json
 }
 
 ### Új óra meghirdetése tanárként - Fizika (POST /api/teacher/lessons) (201 Created)
-POST http://localhost:5000/api/teacher/lessons
+POST http://localhost:3000/api/teacher/lessons
 Authorization: Bearer {{TEACHERTOKEN}}
 Content-Type: application/json
 
@@ -238,7 +238,7 @@ Content-Type: application/json
 }
 
 ### Új óra meghirdetése hiányzó tantárggyal tanárként (várhatóan 400 Hiba)
-POST http://localhost:5000/api/teacher/lessons
+POST http://localhost:3000/api/teacher/lessons
 Authorization: Bearer {{TEACHERTOKEN}}
 Content-Type: application/json
 
@@ -247,7 +247,7 @@ Content-Type: application/json
 }
 
 ### Új óra meghirdetése érvénytelen dátummal tanárként (várhatóan 400 Hiba)
-POST http://localhost:5000/api/teacher/lessons
+POST http://localhost:3000/api/teacher/lessons
 Authorization: Bearer {{TEACHERTOKEN}}
 Content-Type: application/json
 
@@ -257,28 +257,28 @@ Content-Type: application/json
 }
 
 ### Saját meghirdetett órák listázása tanárként (GET /api/teacher/lessons) (200 OK)
-GET http://localhost:5000/api/teacher/lessons
+GET http://localhost:3000/api/teacher/lessons
 Authorization: Bearer {{TEACHERTOKEN}}
 
 ### Saját statisztika lekérdezése tanárként (GET /api/teacher/stats) (200 OK)
-GET http://localhost:5000/api/teacher/stats
+GET http://localhost:3000/api/teacher/stats
 Authorization: Bearer {{TEACHERTOKEN}}
 
 # Tipp: a @lessonId egy olyan óra ID-ja legyen, amely 'foglalt' státuszban van
 ### Foglalt óra jóváhagyása tanárként (PUT /api/teacher/lessons/{{lessonId}}/approve) (200 OK)
-PUT http://localhost:5000/api/teacher/lessons/{{lessonId}}/approve
+PUT http://localhost:3000/api/teacher/lessons/{{lessonId}}/approve
 Authorization: Bearer {{TEACHERTOKEN}}
 
 ### Nem létező óra jóváhagyása tanárként (várhatóan 400 Hiba)
-PUT http://localhost:5000/api/teacher/lessons/9999/approve
+PUT http://localhost:3000/api/teacher/lessons/9999/approve
 Authorization: Bearer {{TEACHERTOKEN}}
 
 ### Saját óra lemondása tanárként (PUT /api/teacher/lessons/{{lessonId}}/cancel) (200 OK)
-PUT http://localhost:5000/api/teacher/lessons/{{lessonId}}/cancel
+PUT http://localhost:3000/api/teacher/lessons/{{lessonId}}/cancel
 Authorization: Bearer {{TEACHERTOKEN}}
 
 ### Tanári órák listázása DIÁK tokennel (várhatóan 403 Hiba)
-GET http://localhost:5000/api/teacher/lessons
+GET http://localhost:3000/api/teacher/lessons
 Authorization: Bearer {{STUDENTTOKEN}}
 
 
@@ -287,24 +287,24 @@ Authorization: Bearer {{STUDENTTOKEN}}
 ### ==============================================================================
 
 ### Összes szabad óra listázása diákként (GET /api/student/lessons) (200 OK)
-GET http://localhost:5000/api/student/lessons
+GET http://localhost:3000/api/student/lessons
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Szabad órák szűrése tanárra diákként (GET /api/student/lessons?teacher=Kovacs) (200 OK)
-GET http://localhost:5000/api/student/lessons?teacher=Kovacs
+GET http://localhost:3000/api/student/lessons?teacher=Kovacs
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Szabad órák szűrése tantárgyra diákként (GET /api/student/lessons?subject=Matematika) (200 OK)
-GET http://localhost:5000/api/student/lessons?subject=Matematika
+GET http://localhost:3000/api/student/lessons?subject=Matematika
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Szabad órák összetett szűrése diákként (GET /api/student/lessons?teacher=Kovacs&subject=Matematika) (200 OK)
-GET http://localhost:5000/api/student/lessons?teacher=Kovacs&subject=Matematika
+GET http://localhost:3000/api/student/lessons?teacher=Kovacs&subject=Matematika
 Authorization: Bearer {{STUDENTTOKEN}}
 
 # Tipp: a @lessonId egy szabad státuszú óra ID-ja legyen
 ### Szabad óra lefoglalása diákként (POST /api/student/book) (201 Created)
-POST http://localhost:5000/api/student/book
+POST http://localhost:3000/api/student/book
 Authorization: Bearer {{STUDENTTOKEN}}
 Content-Type: application/json
 
@@ -313,7 +313,7 @@ Content-Type: application/json
 }
 
 ### Már lefoglalt óra újrafoglalása diákként (várhatóan 400 Hiba)
-POST http://localhost:5000/api/student/book
+POST http://localhost:3000/api/student/book
 Authorization: Bearer {{STUDENTTOKEN}}
 Content-Type: application/json
 
@@ -322,7 +322,7 @@ Content-Type: application/json
 }
 
 ### Nem létező óra lefoglalása diákként (várhatóan 400 Hiba)
-POST http://localhost:5000/api/student/book
+POST http://localhost:3000/api/student/book
 Authorization: Bearer {{STUDENTTOKEN}}
 Content-Type: application/json
 
@@ -331,22 +331,22 @@ Content-Type: application/json
 }
 
 ### Saját foglalások listázása diákként (GET /api/student/my-bookings) (200 OK)
-GET http://localhost:5000/api/student/my-bookings
+GET http://localhost:3000/api/student/my-bookings
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Saját foglalás lemondása diákként (PUT /api/student/bookings/{{lessonId}}/cancel) (200 OK)
-PUT http://localhost:5000/api/student/bookings/{{lessonId}}/cancel
+PUT http://localhost:3000/api/student/bookings/{{lessonId}}/cancel
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Nem létező foglalás lemondása diákként (várhatóan 400 Hiba)
-PUT http://localhost:5000/api/student/bookings/99999/cancel
+PUT http://localhost:3000/api/student/bookings/99999/cancel
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Saját foglalások lekérdezése token NÉLKÜL (várhatóan 401 Hiba)
-GET http://localhost:5000/api/student/my-bookings
+GET http://localhost:3000/api/student/my-bookings
 
 ### Saját foglalások lekérdezése TANÁR tokennel (várhatóan 403 Hiba)
-GET http://localhost:5000/api/student/my-bookings
+GET http://localhost:3000/api/student/my-bookings
 Authorization: Bearer {{TEACHERTOKEN}}
 
 
@@ -355,23 +355,23 @@ Authorization: Bearer {{TEACHERTOKEN}}
 ### ==============================================================================
 
 ### Értesítések lekérdezése DIÁK tokennel (GET /api/notifications) (200 OK)
-GET http://localhost:5000/api/notifications
+GET http://localhost:3000/api/notifications
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Értesítések lekérdezése TANÁR tokennel (GET /api/notifications) (200 OK)
-GET http://localhost:5000/api/notifications
+GET http://localhost:3000/api/notifications
 Authorization: Bearer {{TEACHERTOKEN}}
 
 ### Értesítés olvasottnak jelölése DIÁK tokennel (PUT /api/notifications/{{notifId}}/read) (200 OK)
-PUT http://localhost:5000/api/notifications/{{notifId}}/read
+PUT http://localhost:3000/api/notifications/{{notifId}}/read
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Nem létező értesítés olvasottnak jelölése DIÁK tokennel (várhatóan 400 Hiba)
-PUT http://localhost:5000/api/notifications/99999/read
+PUT http://localhost:3000/api/notifications/99999/read
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Értesítések lekérdezése token NÉLKÜL (várhatóan 401 Hiba)
-GET http://localhost:5000/api/notifications
+GET http://localhost:3000/api/notifications
 
 
 ### ==============================================================================
@@ -384,11 +384,11 @@ GET http://localhost:5000/api/notifications
 ### ==============================================================================
 
 ### Saját profil törlése DIÁK tokennel (DELETE /api/student/profile) (200 OK)
-DELETE http://localhost:5000/api/student/profile
+DELETE http://localhost:3000/api/student/profile
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Inaktivált diák bejelentkezési kísérlete (várhatóan 401 Hiba)
-POST http://localhost:5000/api/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -397,15 +397,15 @@ Content-Type: application/json
 }
 
 ### Törölt diák korábbi tokenjének felhasználása (várhatóan 401 Hiba)
-GET http://localhost:5000/api/student/my-bookings
+GET http://localhost:3000/api/student/my-bookings
 Authorization: Bearer {{STUDENTTOKEN}}
 
 ### Tanár inaktiválása ADMIN tokennel (DELETE /api/admin/teachers/{{teacherId}}) (200 OK)
-DELETE http://localhost:5000/api/admin/teachers/{{teacherId}}
+DELETE http://localhost:3000/api/admin/teachers/{{teacherId}}
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Inaktivált tanár bejelentkezési kísérlete (várhatóan 401 Hiba)
-POST http://localhost:5000/api/auth/login
+POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
@@ -414,13 +414,13 @@ Content-Type: application/json
 }
 
 ### Diák inaktiválása ADMIN tokennel (DELETE /api/admin/students/{{studentId}}) (200 OK)
-DELETE http://localhost:5000/api/admin/students/{{studentId}}
+DELETE http://localhost:3000/api/admin/students/{{studentId}}
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Inaktivált tanárok lekérdezése ADMIN tokennel (GET /api/admin/teachers?includeDeleted=true) (200 OK)
-GET http://localhost:5000/api/admin/teachers?includeDeleted=true
+GET http://localhost:3000/api/admin/teachers?includeDeleted=true
 Authorization: Bearer {{ADMINTOKEN}}
 
 ### Inaktivált diákok lekérdezése ADMIN tokennel (GET /api/admin/students?includeDeleted=true) (200 OK)
-GET http://localhost:5000/api/admin/students?includeDeleted=true
+GET http://localhost:3000/api/admin/students?includeDeleted=true
 Authorization: Bearer {{ADMINTOKEN}}
