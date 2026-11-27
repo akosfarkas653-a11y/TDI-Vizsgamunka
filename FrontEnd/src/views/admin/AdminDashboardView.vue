@@ -21,16 +21,13 @@ const isLoadingStats = ref(false);
 async function loadStats() {
   try {
     isLoadingStats.value = true;
-    const [teachersRes, studentsRes, lessonsRes] = await Promise.all([
-      adminApi.getTeachers(false),
-      adminApi.getStudents(false),
-      adminApi.getBookedLessons()
-    ]);
+    const res = await adminApi.getStats();
+    const data = res.data;
 
     stats.value = {
-      teacherCount: Array.isArray(teachersRes.data) ? teachersRes.data.length : 0,
-      studentCount: Array.isArray(studentsRes.data) ? studentsRes.data.length : 0,
-      lessonCount: Array.isArray(lessonsRes.data) ? lessonsRes.data.length : 0
+      teacherCount: data.teachers?.active || 0,
+      studentCount: data.students?.active || 0,
+      lessonCount: (data.lessons?.foglalt || 0) + (data.lessons?.jovahagyott || 0)
     };
   } catch (err) {
     console.warn('Admin statisztikák betöltése sikertelen:', err);

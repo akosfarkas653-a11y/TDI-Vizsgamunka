@@ -110,9 +110,32 @@ watch(
       </div>
     </nav>
 
-    <!-- Bejelentkezés gomb kijelentkezett állapotban -->
-    <div v-if="!authStore.isAuthenticated" class="nav-btn">
-      <router-link to="/login" class="btn-login">BEJELENTKEZÉS</router-link>
+    <!-- Bejelentkezés vagy Saját felület gomb -->
+    <div class="nav-btn">
+      <router-link v-if="!authStore.isAuthenticated" to="/login" class="btn-login">
+        BEJELENTKEZÉS
+      </router-link>
+      <router-link
+        v-else-if="authStore.isStudent"
+        :to="{ name: 'student-lessons' }"
+        class="btn-login"
+      >
+        SAJÁT FELÜLET
+      </router-link>
+      <router-link
+        v-else-if="authStore.isTeacher"
+        :to="{ name: 'teacher-lessons' }"
+        class="btn-login"
+      >
+        SAJÁT FELÜLET
+      </router-link>
+      <router-link
+        v-else-if="authStore.isAdmin"
+        :to="{ name: 'admin-dashboard' }"
+        class="btn-login"
+      >
+        ADMIN FELÜLET
+      </router-link>
     </div>
   </header>
 </template>

@@ -82,6 +82,16 @@ const deleteStudent = async (req, res) => {
   }
 };
 
+// Rendszerszintu statisztikak lekerdezese
+const getStats = async (req, res) => {
+  try {
+    const stats = await adminService.getStats();
+    res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   createTeacher,
   getTeachers,
@@ -90,6 +100,7 @@ module.exports = {
   getTeacherOverview,
   getStudentOverview,
   deleteTeacher,
-  deleteStudent
+  deleteStudent,
+  getStats
 };
 

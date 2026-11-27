@@ -39,5 +39,10 @@ export const adminApi = {
   // Diák soft delete
   deleteStudent(studentId) {
     return apiClient.delete(`/admin/students/${studentId}`);
+  },
+
+  // Rendszerszintű statisztikák
+  getStats() {
+    return apiClient.get('/admin/stats');
   }
 };

@@ -173,6 +173,14 @@ onMounted(() => {
         :show-student="true"
       >
         <template #actions>
+          <router-link
+            v-if="lesson.diak_id && (lesson.statusz_id === 1 || lesson.statusz_id === 2)"
+            :to="{ name: 'teacher-messages', params: { lessonId: lesson.ora_ID } }"
+            class="btn btn-outline-primary btn-sm btn-action-full"
+          >
+            💬 Üzenetek
+          </router-link>
+
           <!-- Ha függőben van (1): Jóváhagyás és Lemondás -->
           <template v-if="lesson.statusz_id === 1">
             <button

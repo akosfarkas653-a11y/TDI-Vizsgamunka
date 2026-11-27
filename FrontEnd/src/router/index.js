@@ -47,6 +47,13 @@ const routes = [
     component: () => import('@/views/student/StudentProfileView.vue'),
     meta: { requiresAuth: true, role: 'student', title: 'Profil beállítások' }
   },
+  {
+    path: '/student/messages/:lessonId',
+    name: 'student-messages',
+    component: () => import('@/views/shared/MessagesView.vue'),
+    props: true,
+    meta: { requiresAuth: true, role: 'student', title: 'Üzenetek' }
+  },
 
   // Tanár útvonalak
   {
@@ -72,6 +79,13 @@ const routes = [
     name: 'teacher-notifications',
     component: () => import('@/views/shared/NotificationsView.vue'),
     meta: { requiresAuth: true, role: 'teacher', title: 'Értesítések' }
+  },
+  {
+    path: '/teacher/messages/:lessonId',
+    name: 'teacher-messages',
+    component: () => import('@/views/shared/MessagesView.vue'),
+    props: true,
+    meta: { requiresAuth: true, role: 'teacher', title: 'Üzenetek' }
   },
 
   // Adminisztrátor útvonalak

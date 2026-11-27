@@ -26,6 +26,8 @@ const studentRoutes = require('./src/routes/student.routes');
 const teacherRoutes = require('./src/routes/teacher.routes');
 const adminRoutes = require('./src/routes/admin.routes');
 const notificationRoutes = require('./src/routes/notification.routes');
+const publicRoutes = require('./src/routes/public.routes');
+const messageRoutes = require('./src/routes/message.routes');
 
 const app = express();
 
@@ -39,6 +41,8 @@ app.use('/api/student', studentRoutes);
 app.use('/api/teacher', teacherRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/public', publicRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Allapot-ellenorzo vegpont
 app.get('/api/health', (req, res) => {

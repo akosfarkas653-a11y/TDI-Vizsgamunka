@@ -16,6 +16,9 @@ router.get('/students', adminController.getStudents);
 // Foglalt orak listazasa
 router.get('/lessons', adminController.getLessons);
 
+// Rendszerszintu statisztikak lekerdezese
+router.get('/stats', adminController.getStats);
+
 // Reszletes statisztika es orak egy tanarra vagy diakra
 router.get('/teachers/:id/overview', adminController.getTeacherOverview);
 router.get('/students/:id/overview', adminController.getStudentOverview);

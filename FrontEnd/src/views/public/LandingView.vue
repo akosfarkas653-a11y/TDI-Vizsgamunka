@@ -1,59 +1,54 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
-import { studentApi } from '@/api/student.api';
+import { publicApi } from '@/api/public.api';
 
 const router = useRouter();
 const authStore = useAuthStore();
 
-const availableLessons = ref([]);
-const selectedSubject = ref('Matematika');
-const selectedTeacher = ref('Kovács István');
-const isLoadingLessons = ref(false);
-
-const defaultSubjects = ['Matematika', 'Fizika', 'Angol', 'Informatika', 'Kémia', 'Történelem'];
-const defaultTeachers = ['Kovács István', 'Tóth Erzsébet', 'Horváth Péter'];
+const subjects = ref([]);
+const teachers = ref([]);
+const selectedSubject = ref('');
+const selectedTeacher = ref('');
+const isLoadingFilters = ref(false);
+const filterError = ref('');
 
 onMounted(async () => {
-  if (authStore.isStudent) {
-    try {
-      isLoadingLessons.value = true;
-      const res = await studentApi.getFreeLessons();
-      availableLessons.value = res.data || [];
-    } catch (err) {
-      console.warn('Szabad órák betöltése a landing page-en sikertelen:', err);
-    } finally {
-      isLoadingLessons.value = false;
-    }
+  try {
+    isLoadingFilters.value = true;
+    filterError.value = '';
+    const res = await publicApi.getFilters();
+    subjects.value = Array.isArray(res.data?.subjects) ? res.data.subjects : [];
+    teachers.value = Array.isArray(res.data?.teachers) ? res.data.teachers : [];
+  } catch (err) {
+    console.warn('Szűrők betöltése sikertelen:', err);
+    filterError.value = 'A szűrők jelenleg nem tölthetők be.';
+    subjects.value = [];
+    teachers.value = [];
+  } finally {
+    isLoadingFilters.value = false;
   }
 });
 
-const subjectsList = computed(() => {
-  if (availableLessons.value.length > 0) {
-    const set = new Set(availableLessons.value.map((l) => l.tantargy));
-    return Array.from(set);
-  }
-  return defaultSubjects;
-});
+function handleSearchSubmit() {
+  const queryParams = {};
+  if (selectedSubject.value) queryParams.subject = selectedSubject.value;
+  if (selectedTeacher.value) queryParams.teacher = selectedTeacher.value;
 
-const teachersList = computed(() => {
-  if (availableLessons.value.length > 0) {
-    const set = new Set(
-      availableLessons.value
-        .map((l) => l.Teacher?.tanar_nev)
-        .filter(Boolean)
-    );
-    return Array.from(set);
-  }
-  return defaultTeachers;
-});
-
-function handleBookingSubmit() {
   if (!authStore.isAuthenticated) {
+    const params = new URLSearchParams();
+    if (selectedSubject.value) params.append('subject', selectedSubject.value);
+    if (selectedTeacher.value) params.append('teacher', selectedTeacher.value);
+    const queryString = params.toString();
+    const redirectPath = queryString ? `/student?${queryString}` : '/student';
+
     router.push({
       name: 'login',
-      query: { message: 'Időpont foglalásához kérjük, jelentkezz be fiókodba!' }
+      query: {
+        redirect: redirectPath,
+        message: 'A szabad órák kereséséhez kérjük, jelentkezz be!'
+      }
     });
     return;
   }
@@ -61,10 +56,7 @@ function handleBookingSubmit() {
   if (authStore.isStudent) {
     router.push({
       name: 'student-lessons',
-      query: {
-        subject: selectedSubject.value || undefined,
-        teacher: selectedTeacher.value || undefined
-      }
+      query: queryParams
     });
   } else if (authStore.isTeacher) {
     router.push({ name: 'teacher-lessons' });
@@ -79,19 +71,20 @@ function handleBookingSubmit() {
     <!-- Hero Szekció (Háttérkép + Fő tartalom) -->
     <section class="hero">
       <div class="hero-content">
-        <!-- Bal oldal: Szöveg és Foglaló Űrlap -->
+        <!-- Bal oldal: Szöveg és Kereső Űrlap -->
         <div class="hero-text-card">
           <h1>Találd Meg A Tökéletes Magántanárod!</h1>
           <p>Személyre szabott magánórák minden tantárgyból. Foglalj időpontot egyszerűen és gyorsan online!</p>
 
-          <!-- Foglalás Doboz -->
+          <!-- Keresés Doboz -->
           <div class="booking-box">
             <h3>FOGLALJ IDŐPONTOT MOST</h3>
-            <form @submit.prevent="handleBookingSubmit">
+            <form @submit.prevent="handleSearchSubmit">
               <div class="form-group">
                 <label for="subject-select">Válassz tantárgyat:</label>
                 <select id="subject-select" v-model="selectedSubject">
-                  <option v-for="subj in subjectsList" :key="subj" :value="subj">
+                  <option value="">Összes tantárgy</option>
+                  <option v-for="subj in subjects" :key="subj" :value="subj">
                     {{ subj }}
                   </option>
                 </select>
@@ -100,13 +93,18 @@ function handleBookingSubmit() {
               <div class="form-group">
                 <label for="teacher-select">Válassz tanárt:</label>
                 <select id="teacher-select" v-model="selectedTeacher">
-                  <option v-for="teach in teachersList" :key="teach" :value="teach">
+                  <option value="">Összes tanár</option>
+                  <option v-for="teach in teachers" :key="teach" :value="teach">
                     {{ teach }}
                   </option>
                 </select>
               </div>
 
-              <button type="submit" class="btn-book">IDŐPONT FOGLALÁSA</button>
+              <p v-if="filterError" class="filter-error-text">
+                {{ filterError }}
+              </p>
+
+              <button type="submit" class="btn-book">Óra keresése</button>
             </form>
           </div>
         </div>
@@ -177,7 +175,6 @@ function handleBookingSubmit() {
   padding: 25px;
   border-radius: 16px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-  opacity: 95%;
 }
 
 .booking-box h3 {
@@ -215,6 +212,13 @@ function handleBookingSubmit() {
 .form-group select:focus,
 .form-group input:focus {
   border-color: #ff6b5b;
+}
+
+.filter-error-text {
+  font-size: 12px;
+  color: #e53e3e;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 .btn-book {

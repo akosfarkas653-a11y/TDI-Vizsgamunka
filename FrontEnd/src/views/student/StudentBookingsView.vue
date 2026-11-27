@@ -106,14 +106,21 @@ onMounted(() => {
         :show-student="false"
       >
         <template #actions>
-          <!-- Lemondás gomb csak akkor aktív, ha az óra függőben (1) vagy jóváhagyott (2) állapotban van -->
-          <button
-            v-if="booking.statusz_id === 1 || booking.statusz_id === 2"
-            class="btn btn-outline-danger btn-sm btn-cancel-action"
-            @click="openCancelModal(booking)"
-          >
-            Foglalás lemondása
-          </button>
+          <!-- Lemondás és üzenetek gombok, ha az óra függőben (1) vagy jóváhagyott (2) állapotban van -->
+          <template v-if="booking.statusz_id === 1 || booking.statusz_id === 2">
+            <router-link
+              :to="{ name: 'student-messages', params: { lessonId: booking.ora_ID } }"
+              class="btn btn-outline-primary btn-sm btn-action-btn"
+            >
+              💬 Üzenetek
+            </router-link>
+            <button
+              class="btn btn-outline-danger btn-sm btn-action-btn"
+              @click="openCancelModal(booking)"
+            >
+              Foglalás lemondása
+            </button>
+          </template>
           <span v-else-if="booking.statusz_id === 3" class="status-note text-muted">
             Ez az óra lemondott állapotban van.
           </span>
@@ -137,8 +144,9 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.btn-cancel-action {
-  width: 100%;
+.btn-action-btn {
+  flex: 1;
+  text-align: center;
 }
 
 .status-note {

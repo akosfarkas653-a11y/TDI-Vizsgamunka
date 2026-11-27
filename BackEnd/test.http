@@ -14,12 +14,22 @@
 @ADMINTOKEN = {{loginAdmin.response.body.token}}
 @STUDENTTOKEN = {{loginStudent.response.body.token}}
 @TEACHERTOKEN = {{loginTeacher.response.body.token}}
+@MSGSTUDENTTOKEN = {{loginMsgStudent.response.body.token}}
+@MSGTEACHERTOKEN = {{loginMsgTeacher.response.body.token}}
+@OTHERSTUDENTTOKEN = {{loginOtherStudent.response.body.token}}
+@CANCELLEDSTUDENTTOKEN = {{loginCancelledStudent.response.body.token}}
 
 ### Manuálisan módosítható azonosítók (a listázó kérések kimenete alapján frissíthető):
 @lessonId = 1
 @studentId = 1
 @teacherId = 1
 @notifId = 1
+
+### Üzenet teszteléshez szükséges leckék azonosítói:
+# A @msgLessonId értéke ellenőrizhető a GET /api/student/my-bookings hívással
+@msgLessonId = 5
+@msgFreeLessonId = 1
+@msgCancelledLessonId = 10
 
 
 ### ==============================================================================
@@ -28,6 +38,9 @@
 
 ### Rendszer állapot ellenőrzése token nélkül (GET /api/health) (200 OK)
 GET http://localhost:3000/api/health
+
+### Publikus szűrők lekérdezése token nélkül (GET /api/public/filters) (200 OK)
+GET http://localhost:3000/api/public/filters
 
 ### Nem létező gyökér végpont lekérdezése (várhatóan 404 Hiba)
 GET http://localhost:3000/
@@ -146,6 +159,46 @@ Content-Type: application/json
   "jelszo": "password123"
 }
 
+### Bejelentkezés üzenetküldés teszteléshez - Diák (Nagy Anna / password123)
+# @name loginMsgStudent
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "nagy.anna@example.com",
+  "jelszo": "password123"
+}
+
+### Bejelentkezés üzenetküldés teszteléshez - Tanár (Kovács István / password123)
+# @name loginMsgTeacher
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "kovacs.istvan@example.com",
+  "jelszo": "password123"
+}
+
+### Bejelentkezés üzenetküldés teszteléshez - Kívülálló diák (Szabó Bence / password123)
+# @name loginOtherStudent
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "szabo.bence@example.com",
+  "jelszo": "password123"
+}
+
+### Bejelentkezés üzenetküldés teszteléshez - Lemondott óra diákja (Németh Gábor / password123)
+# @name loginCancelledStudent
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "nemeth.gabor@example.com",
+  "jelszo": "password123"
+}
+
 
 ### ==============================================================================
 ### 3. ADMINISZTRÁTORI MŰVELETEK (/api/admin)
@@ -210,6 +263,17 @@ GET http://localhost:3000/api/admin/teachers
 
 ### Admin végpont hívása DIÁK tokennel (várhatóan 403 Hiba)
 GET http://localhost:3000/api/admin/teachers
+Authorization: Bearer {{STUDENTTOKEN}}
+
+### Rendszerszintű statisztika lekérdezése ADMIN tokennel (GET /api/admin/stats) (200 OK)
+GET http://localhost:3000/api/admin/stats
+Authorization: Bearer {{ADMINTOKEN}}
+
+### Rendszerszintű statisztika lekérdezése token NÉLKÜL (várhatóan 401 Hiba)
+GET http://localhost:3000/api/admin/stats
+
+### Rendszerszintű statisztika lekérdezése DIÁK tokennel (várhatóan 403 Hiba)
+GET http://localhost:3000/api/admin/stats
 Authorization: Bearer {{STUDENTTOKEN}}
 
 
@@ -375,7 +439,107 @@ GET http://localhost:3000/api/notifications
 
 
 ### ==============================================================================
-### 7. TÖRLÉS ÉS INAKTIVÁLÁS (SOFT DELETE) - A TESZT VÉGÉN
+### 7. ÜZENETEK (/api/messages)
+### ==============================================================================
+
+### Üzenet küldése diákként a tanárnak (POST /api/messages) (201 Created)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{MSGSTUDENTTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": {{msgLessonId}},
+  "szoveg": "Jó napot kívánok! Hozzak valamit az órára?"
+}
+
+### Üzenet küldése tanárként a diáknak (POST /api/messages) (201 Created)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{MSGTEACHERTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": {{msgLessonId}},
+  "szoveg": "Üdvözlöm! Csak a füzetet és számológépet hozzon magával."
+}
+
+### Üzenet küldése üres szöveggel diákként (várhatóan 400 Hiba)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{MSGSTUDENTTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": {{msgLessonId}},
+  "szoveg": "   "
+}
+
+### Üzenet küldése 500 karakternél hosszabb szöveggel diákként (várhatóan 400 Hiba)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{MSGSTUDENTTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": {{msgLessonId}},
+  "szoveg": "Ez egy tul hosszu uzenet, amely meghaladja az ot szaz karakteres limitet. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum et amplius."
+}
+
+### Üzenet küldése kívülálló diákként (várhatóan 403 Hiba)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{OTHERSTUDENTTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": {{msgLessonId}},
+  "szoveg": "Kívülállóként próbálok meg írni erre az órára."
+}
+
+### Üzenet küldése nem létező órához (várhatóan 404 Hiba)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{MSGSTUDENTTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": 99999,
+  "szoveg": "Nem létező órához írt üzenet."
+}
+
+### Üzenet küldése szabad órához a saját tanára által (várhatóan 400 Hiba)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{MSGTEACHERTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": {{msgFreeLessonId}},
+  "szoveg": "Szabad órához próbálok meg üzenetet írni."
+}
+
+### Üzenet küldése lemondott órához a diákja által (várhatóan 400 Hiba)
+POST http://localhost:3000/api/messages
+Authorization: Bearer {{CANCELLEDSTUDENTTOKEN}}
+Content-Type: application/json
+
+{
+  "lessonId": {{msgCancelledLessonId}},
+  "szoveg": "Lemondott órához próbálok meg üzenetet írni."
+}
+
+### Óra beszélgetésfolyamának lekérdezése diákként (GET /api/messages/lesson/:lessonId) (200 OK)
+GET http://localhost:3000/api/messages/lesson/{{msgLessonId}}
+Authorization: Bearer {{MSGSTUDENTTOKEN}}
+
+### Óra beszélgetésfolyamának lekérdezése tanárként (GET /api/messages/lesson/:lessonId) (200 OK)
+GET http://localhost:3000/api/messages/lesson/{{msgLessonId}}
+Authorization: Bearer {{MSGTEACHERTOKEN}}
+
+### Óra beszélgetésfolyamának lekérdezése token NÉLKÜL (várhatóan 401 Hiba)
+GET http://localhost:3000/api/messages/lesson/{{msgLessonId}}
+
+### Óra beszélgetésfolyamának lekérdezése ADMIN tokennel (várhatóan 403 Hiba)
+GET http://localhost:3000/api/messages/lesson/{{msgLessonId}}
+Authorization: Bearer {{ADMINTOKEN}}
+
+
+### ==============================================================================
+### 8. TÖRLÉS ÉS INAKTIVÁLÁS (SOFT DELETE) - A TESZT VÉGÉN
 ### ==============================================================================
 ### FONTOS MEGJEGYZÉS:
 ### Ez a szekció azért van a fájl legvégén, mert a profilok és felhasználók

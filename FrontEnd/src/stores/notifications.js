@@ -36,7 +36,7 @@ export const useNotificationStore = defineStore('notifications', () => {
     try {
       await notificationApi.markAsRead(notificationId);
       const item = notifications.value.find(
-        (n) => n.ertesites_ID === notificationId
+        (n) => n.notif_ID === notificationId
       );
       if (item) {
         item.olvasott = 1;

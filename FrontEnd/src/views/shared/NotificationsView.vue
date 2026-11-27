@@ -48,7 +48,7 @@ async function handleMarkAsRead(notifId) {
     <div v-else class="notifications-list">
       <div
         v-for="notif in notificationStore.notifications"
-        :key="notif.ertesites_ID"
+        :key="notif.notif_ID"
         class="card notif-card"
         :class="{ 'notif-card--unread': !notif.olvasott }"
       >
@@ -67,7 +67,7 @@ async function handleMarkAsRead(notifId) {
           <button
             v-if="!notif.olvasott"
             class="btn btn-sm btn-secondary"
-            @click="handleMarkAsRead(notif.ertesites_ID)"
+            @click="handleMarkAsRead(notif.notif_ID)"
           >
             ✓ Olvasottnak jelölés
           </button>
