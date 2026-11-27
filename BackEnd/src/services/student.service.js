@@ -29,6 +29,10 @@ const bookLesson = async (studentId, lessonId) => {
     throw new Error('Ez az ora mar nem szabad, nem foglalhato!');
   }
 
+  if (new Date(lesson.ora_TIME) < new Date()) {
+    throw new Error('Ez az ora mar elmult, nem foglalhato!');
+  }
+
   const updatedLesson = await lessonRepository.update(lessonId, {
     diak_id: studentId,
     statusz_id: STATUS.FOGLALT

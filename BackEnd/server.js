@@ -19,6 +19,7 @@ const { checkEmptyTable: checkEmptyAdminTable } = require('./src/z_dummy_data/ad
 const { checkEmptyTable: checkEmptyTeachersTable } = require('./src/z_dummy_data/teachers_dummy');
 const { checkEmptyTable: checkEmptyStudentsTable } = require('./src/z_dummy_data/students_dummy');
 const { checkEmptyTable: checkEmptyLessonsTable } = require('./src/z_dummy_data/lessons_dummy');
+const { checkEmptyTable: checkEmptyMessagesTable } = require('./src/z_dummy_data/messages_dummy');
 
 const authRoutes = require('./src/routes/auth.routes');
 const studentRoutes = require('./src/routes/student.routes');
@@ -53,4 +54,5 @@ app.listen(PORT, async () => {
   await checkEmptyTeachersTable();
   await checkEmptyStudentsTable();
   await checkEmptyLessonsTable();
+  await checkEmptyMessagesTable();
 });

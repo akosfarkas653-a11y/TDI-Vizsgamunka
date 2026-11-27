@@ -31,6 +31,14 @@ const studentRepository = {
     return await Student.count();
   },
 
+  countActive: async () => {
+    return await Student.count({ where: { deleted: 0 } });
+  },
+
+  countDeleted: async () => {
+    return await Student.count({ where: { deleted: 1 } });
+  },
+
   softDelete: async (id) => {
     return await Student.update({ deleted: 1 }, { where: { diak_ID: id } });
   }

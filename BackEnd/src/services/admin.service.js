@@ -199,6 +199,21 @@ const deleteStudent = async (studentId) => {
   return { message: 'Diak fiok sikeresen inaktivalva (soft delete).' };
 };
 
+// Rendszerszintu statisztikak lekerdezese (Admin)
+const getStats = async () => {
+  const teacherActive = await teacherRepository.countActive();
+  const teacherDeleted = await teacherRepository.countDeleted();
+  const studentActive = await studentRepository.countActive();
+  const studentDeleted = await studentRepository.countDeleted();
+  const lessonStats = await lessonRepository.countAllByStatus();
+
+  return {
+    teachers: { active: teacherActive, deleted: teacherDeleted },
+    students: { active: studentActive, deleted: studentDeleted },
+    lessons: lessonStats
+  };
+};
+
 module.exports = {
   createTeacher,
   getTeachers,
@@ -207,6 +222,7 @@ module.exports = {
   getTeacherOverview,
   getStudentOverview,
   deleteTeacher,
-  deleteStudent
+  deleteStudent,
+  getStats
 };
 

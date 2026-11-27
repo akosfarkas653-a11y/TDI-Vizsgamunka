@@ -5,6 +5,7 @@ const Admin = require('./Admin');
 const LessonStatus = require('./LessonStatus');
 const Lesson = require('./Lesson');
 const Notification = require('./Notification');
+const Message = require('./Message');
 
 // Modell kapcsolatok (Asszociaciok)
 Teacher.hasMany(Lesson, { foreignKey: 'tanar_id' });
@@ -18,6 +19,9 @@ Lesson.belongsTo(LessonStatus, { foreignKey: 'statusz_id', as: 'statusz' });
 
 Lesson.hasMany(Notification, { foreignKey: 'ora_id' });
 Notification.belongsTo(Lesson, { foreignKey: 'ora_id' });
+
+Lesson.hasMany(Message, { foreignKey: 'ora_id' });
+Message.belongsTo(Lesson, { foreignKey: 'ora_id' });
 
 // Adatbazis szinkronizalas (tablak letrehozasa/ellenorzese)
 const syncDatabase = async () => {
@@ -39,6 +43,7 @@ module.exports = {
   LessonStatus,
   Lesson,
   Notification,
+  Message,
   syncDatabase,
   connectDB
 };

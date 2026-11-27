@@ -20,6 +20,10 @@ const createLesson = async (teacherId, { tantargy, ora_TIME }) => {
     throw new Error('Ervenytelen datum vagy idopont!');
   }
 
+  if (lessonDate < new Date()) {
+    throw new Error('Az ora idopontja nem lehet a multban!');
+  }
+
   const lesson = await lessonRepository.create({
     tanar_id: teacherId,
     diak_id: null,

@@ -31,6 +31,14 @@ const teacherRepository = {
     return await Teacher.count();
   },
 
+  countActive: async () => {
+    return await Teacher.count({ where: { deleted: 0 } });
+  },
+
+  countDeleted: async () => {
+    return await Teacher.count({ where: { deleted: 1 } });
+  },
+
   softDelete: async (id) => {
     return await Teacher.update({ deleted: 1 }, { where: { tanar_ID: id } });
   }

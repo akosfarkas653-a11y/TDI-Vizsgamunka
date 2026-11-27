@@ -19,8 +19,8 @@ const lessonRepository = {
   findById: async (id) => {
     return await Lesson.findByPk(id, {
       include: [
-        { model: Teacher, attributes: ['tanar_ID', 'tanar_nev', 'tanar_email'] },
-        { model: Student, attributes: ['diak_ID', 'diak_nev', 'diak_email'] },
+        { model: Teacher, attributes: ['tanar_ID', 'tanar_nev', 'tanar_email', 'deleted'] },
+        { model: Student, attributes: ['diak_ID', 'diak_nev', 'diak_email', 'deleted'] },
         { model: LessonStatus, as: 'statusz', attributes: ['statusz_ID', 'statusz_nev'] }
       ]
     });
@@ -33,7 +33,10 @@ const lessonRepository = {
 
   // Szabad orak keresese (tanar es tantargy szurokkel)
   findFreeLessons: async ({ teacherName, subject } = {}) => {
-    const where = { statusz_id: STATUS.SZABAD };
+    const where = {
+      statusz_id: STATUS.SZABAD,
+      ora_TIME: { [Op.gt]: new Date() }
+    };
     if (subject) {
       where.tantargy = { [Op.like]: `%${subject}%` };
     }
@@ -59,6 +62,29 @@ const lessonRepository = {
       ],
       order: [['ora_TIME', 'ASC']]
     });
+  },
+
+  // Szabad orak szuroi (tantargyak es tanarok)
+  findFreeFilters: async () => {
+    const lessons = await Lesson.findAll({
+      where: {
+        statusz_id: STATUS.SZABAD,
+        ora_TIME: { [Op.gt]: new Date() }
+      },
+      include: [
+        {
+          model: Teacher,
+          where: { deleted: 0 },
+          attributes: ['tanar_nev']
+        }
+      ],
+      attributes: ['tantargy']
+    });
+
+    const subjects = [...new Set(lessons.map((l) => l.tantargy).filter(Boolean))];
+    const teachers = [...new Set(lessons.map((l) => (l.Teacher ? l.Teacher.tanar_nev : null)).filter(Boolean))];
+
+    return { subjects, teachers };
   },
 
   // Tanar sajat orai
@@ -143,6 +169,17 @@ const lessonRepository = {
     const lemondva = await Lesson.count({ where: { diak_id: diakId, statusz_id: STATUS.LEMONDVA } });
 
     return { total, foglalt, jovahagyott, lemondva };
+  },
+
+  // Rendszerszintu statisztika az osszes ora statusza szerint
+  countAllByStatus: async () => {
+    const total = await Lesson.count();
+    const szabad = await Lesson.count({ where: { statusz_id: STATUS.SZABAD } });
+    const foglalt = await Lesson.count({ where: { statusz_id: STATUS.FOGLALT } });
+    const jovahagyott = await Lesson.count({ where: { statusz_id: STATUS.JOVAHAGYOTT } });
+    const lemondva = await Lesson.count({ where: { statusz_id: STATUS.LEMONDVA } });
+
+    return { total, szabad, foglalt, jovahagyott, lemondva };
   },
 
   // Diak aktiv orai (FOGLALT vagy JOVAHAGYOTT)
